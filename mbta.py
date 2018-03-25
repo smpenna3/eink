@@ -96,6 +96,7 @@ class mbta(eink):
 		self.title_fontSize = 16
 		self.listing_fontSize = 12
 		self.spacingTop = 20
+		self.interSpacing = 10
 		self.eink.draw.rectangle((0, 0, self.eink.xend, self.title_fontSize+self.spacingTop), fill=0)
 		self.eink.rotatedText(self.stopName, 0, self.title_fontSize, self.eink.xend/2, self.title_fontSize/2+self.spacingTop/2, fill=0)
 		self.eink.lineDraw(0, self.title_fontSize+self.spacingTop, self.eink.xend, self.title_fontSize+self.spacingTop)
@@ -106,15 +107,15 @@ class mbta(eink):
 
 		# Draw the direction of the train
 		for i in range(0, self.max_tmp):
-			self.eink.leftText(item[i][1], self.listing_fontSize, 1, self.title_fontSize+self.spacingTop+8+((self.listing_fontSize+2)*i))
-			self.eink.lineDraw(0, (self.title_fontSize+self.listing_fontSize+self.spacingTop+3)+((self.listing_fontSize+2)*i), self.eink.xend, (self.title_fontSize+self.listing_fontSize+self.spacingTop+3)+((self.listing_fontSize+2)*i))
+			self.eink.leftText(item[i][1], self.listing_fontSize, 1, self.title_fontSize+self.spacingTop+8+self.interSpacing+((self.listing_fontSize+self.interSpacing)*i))
+			self.eink.lineDraw(0, (self.title_fontSize+self.listing_fontSize+self.spacingTop+3+self.interSpacing)+((self.listing_fontSize+self.interSpacing)*i), self.eink.xend, (self.title_fontSize+self.listing_fontSize+self.spacingTop+self.interSpacing+3)+((self.listing_fontSize+self.interSpacing)*i))
 
 		# Draw the time until the train
 		for i in range(0, self.max_tmp):
 			if(len(str(item[i][3])) == 1):
 				item[i][3] = '0' + str(item[i][3])
 			self.str_tmp = str(item[i][2]) + ':' + str(item[i][3])
-			self.eink.rightText(self.str_tmp, self.listing_fontSize, self.eink.xend, self.title_fontSize+self.spacingTop+8+((self.listing_fontSize+2)*i))
+			self.eink.rightText(self.str_tmp, self.listing_fontSize, self.eink.xend, self.title_fontSize+self.spacingTop+8+self.interSpacing+((self.listing_fontSize+self.interSpacing)*i))
 
 		self.eink.display()
 	

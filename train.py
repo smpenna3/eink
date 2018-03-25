@@ -46,11 +46,12 @@ schedjson = json.loads(stop.read().decode())
 print(json.dumps(schedjson, indent=4, sort_keys=True))
 '''
 
-mbta = mbta(stop='Harvard')
+mbta = mbta(stop='Charles')
 #mbta.nearStations()
 
 #print(mbta.predictionsFromLine('Red'))
 
-#a = [['Rapid Transit', 'Northbound', 0, 26], ['Rapid Transit', 'Southbound', 2, 33],['Rapid Transit', 'Northbound', 0, 26],['Rapid Transit', 'Northbound', 0, 26]]
-a =mbta.arrivalToDelta(mbta.predictionsFromStop())
+a = [['Rapid Transit', 'Northbound', 0, 26], ['Rapid Transit', 'Southbound', 8, 12],['Rapid Transit', 'Northbound', 3, 18],['Rapid Transit', 'Southbound', 0, 49]]
+
+#a =mbta.arrivalToDelta(mbta.predictionsFromStop())
 mbta.timesToDisplay(a)
