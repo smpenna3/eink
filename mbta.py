@@ -96,7 +96,8 @@ class mbta(eink):
 		self.title_fontSize = 16
 		self.listing_fontSize = 12
 		self.spacingTop = 20
-		self.eink.rotatedText(self.stopName, 0, self.title_fontSize, self.eink.xend/2, self.title_fontSize/2+1)
+		self.eink.draw.rectangle((0, 0, self.eink.xend, self.title_fontSize+self.spacingTop), fill=0)
+		self.eink.rotatedText(self.stopName, 0, self.title_fontSize, self.eink.xend/2, self.title_fontSize/2+self.spacingTop/2, fill=0)
 		self.eink.lineDraw(0, self.title_fontSize+self.spacingTop, self.eink.xend, self.title_fontSize+self.spacingTop)
 		if(6 > len(item)):
 			self.max_tmp = len(item)
@@ -110,6 +111,8 @@ class mbta(eink):
 
 		# Draw the time until the train
 		for i in range(0, self.max_tmp):
+			if(len(str(item[i][3])) == 1):
+				item[i][3] = '0' + str(item[i][3])
 			self.str_tmp = str(item[i][2]) + ':' + str(item[i][3])
 			self.eink.rightText(self.str_tmp, self.listing_fontSize, self.eink.xend, self.title_fontSize+self.spacingTop+8+((self.listing_fontSize+2)*i))
 
@@ -139,6 +142,7 @@ class mbta(eink):
 
 		except:
 			logger.error("ERROR: Could not find schedule for stop " + str(stopID))
+			logger.error('Response: ' + str(self.json_tmp))
 			logger.error(traceback.print_exc())
 
 

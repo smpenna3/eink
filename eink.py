@@ -97,7 +97,7 @@ class eink:
 		self.draw.text((x, y-(fontSize/2)), string, font=self.font_tmp, fill=0)
 
 
-	def rotatedText(self, string, angle, fontSize, x, y):
+	def rotatedText(self, string, angle, fontSize, x, y, fill=255):
 		'''
 		Draws text to the canvas, rotated to a specified angle
 		INPUTS:
@@ -108,9 +108,14 @@ class eink:
 			y: center y-coordinate
 		'''
 		self.font_tmp = self.fontGrab(fontSize)
-		self.im_tmp = Image.new('1', (self.font_tmp.getsize(string)[0], fontSize), 255)
+		self.fill_tmp = fill
+		if(fill == 0):
+			self.fill_tmp2 = 255
+		else:
+			self.fill_tmp2 = 0
+		self.im_tmp = Image.new('1', (self.font_tmp.getsize(string)[0], fontSize), self.fill_tmp)
 		self.draw_tmp = ImageDraw.Draw(self.im_tmp)
-		self.draw_tmp.text((0, 0), string, font=self.font_tmp, fill=0)
+		self.draw_tmp.text((0, 0), string, font=self.font_tmp, fill=self.fill_tmp2)
 		self.rotated_tmp = self.im_tmp.rotate(angle, expand=1)
 		self.width_tmp, self.height_tmp = self.rotated_tmp.size
 		self.image.paste(self.rotated_tmp, (x-(self.width_tmp/2), y-(self.height_tmp/2)))

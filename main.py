@@ -13,12 +13,12 @@ eink = eink()
 
 # Make some fake data and graph it
 x = [0, 10, 20, 30, 40, 50, 60, 70]
-y = [500, 105, 730, 305, 215, 905, 810, 1050]
+y = [0, 05, 30, 05, 15, 40, 10, 50]
 
-#eink.scatter(5, x, y)
+#eink.scatter(5, x, y, grid='full')
 #eink.display()
 
-#eink.linePlot(x, y, points=True, grid='full')
+#eink.linePlot(x, y, points=True, grid='horizontal')
 #eink.display()
 
 eink.barPlot(x, y, grid='horizontal')

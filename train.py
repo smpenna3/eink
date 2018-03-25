@@ -51,6 +51,6 @@ mbta = mbta(stop='Harvard')
 
 #print(mbta.predictionsFromLine('Red'))
 
-a = [['Rapid Transit', 'Northbound', 0, 26], ['Rapid Transit', 'Southbound', 2, 33],['Rapid Transit', 'Northbound', 0, 26],['Rapid Transit', 'Northbound', 0, 26]]
-#print(mbta.arrivalToDelta(mbta.predictionsFromStop()))
+#a = [['Rapid Transit', 'Northbound', 0, 26], ['Rapid Transit', 'Southbound', 2, 33],['Rapid Transit', 'Northbound', 0, 26],['Rapid Transit', 'Northbound', 0, 26]]
+a =mbta.arrivalToDelta(mbta.predictionsFromStop())
 mbta.timesToDisplay(a)
