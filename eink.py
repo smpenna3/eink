@@ -492,6 +492,16 @@ class eink:
 
 
 	def buttonPress(self, button):
+        '''
+        Will perform an action depending on the button pressed.
+        INPUTS:
+            button: the number of the button that was pressed
+        ACTIONS:
+            1: Moves back a page
+            2: Currently unused
+            3: Currently unused
+            4: Moves forward a page
+        '''
 		self.startPage = self.page
 		# Change page number depending on button press
 		if(button == 1):
