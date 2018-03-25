@@ -15,11 +15,10 @@ eink = eink()
 x = [0, 10, 20, 30, 40, 50, 60, 70]
 y = [0, 05, 30, 05, 15, 40, 10, 50]
 
+# Graph the data
 #eink.scatter(5, x, y, grid='full')
-#eink.display()
 
-#eink.linePlot(x, y, points=True, grid='horizontal')
-#eink.display()
+#eink.linePlot(x, y, points=True)
 
 eink.barPlot(x, y, grid='horizontal')
 

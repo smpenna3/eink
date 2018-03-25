@@ -11,7 +11,6 @@ import sys
 # Grab logger
 logger = logging.getLogger('mainlog')
 
-
 class eink:
 	def __init__(self):
 		'''
@@ -56,18 +55,6 @@ class eink:
 			fontSize: the size of the font to return
 		'''
 		return ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', fontSize)		
-
-	
-	def lineDraw(self, x1, y1, x2, y2):
-		'''
-		Draws a line on the display in the given location
-		INPUTS:
-			x1: First x-coordinate
-			y1: First y-coordinate
-			x2: Second x-coordinate
-			y2: Second y-coordinate
-		'''
-		self.draw.line((x1, y1, x2, y2), fill=0)
 
 
 	def rightText(self, string, fontSize, x, y):
