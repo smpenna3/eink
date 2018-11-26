@@ -1,5 +1,6 @@
 # eink
-Library to use the Waveshare 2.7" e-paper HAT for Raspberry Pi
+### Library to use the Waveshare 2.7" e-paper HAT for Raspberry Pi
+This library allows you to create graphs and plots, display text on the screen, and draw shapes among other things.  A few libraries from Waveshare are included for the communication with the e-ink screen, and PIL is also required (see below).  There are a few demo files, `main.py` and `train.py`.
 
 ### Required Libraries
 - PIL (*sudo apt-get install python-imaging*)
