@@ -13,7 +13,7 @@ eink = eink()
 
 # Make some fake data and graph it
 x = [0, 10, 20, 30, 40, 50, 60, 70]
-y = [0, 05, 30, 05, 15, 40, 10, 50]
+y = [0, 5, 30, 5, 15, 40, 10, 50]
 
 # Graph the data
 #eink.scatter(5, x, y, grid='full')
