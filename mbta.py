@@ -1,11 +1,17 @@
 import requests
 import json
 from eink import eink
-import datetime
 import logging
 import traceback
 import sys
+import math
 from stops import stops
+from datetime import datetime as dt
+import pytz
+
+timezone = pytz.timezone('US/Eastern')
+
+directions = ['South', 'North']
 
 
 class MBTATimeTracker(eink):
@@ -32,19 +38,36 @@ class MBTATimeTracker(eink):
 	def stop_predictions(self):
 		''' Get predictions for the stop '''
 		# Returns a list of predictions
-		predictions = self.mbta_request('predictions?filter[stop]'+str(self.stopname))
+		predictions = self.mbta_request('predictions?filter[stop]='+str(self.stopname))
 
 		return_predictions = []
 
 		for prediction in predictions:
 			# Each prediction is a dictionary
-			direction = self.getDirection(prediction['attributes']['direction_id'], self.line)
+			direction = directions[prediction['attributes']['direction_id']]
+			#direction = self.getDirection(prediction['attributes']['direction_id'], self.line)
 			departure_time = prediction['attributes']['departure_time']
 
-			return_predictions.append([direction, departure_time])
+			minutes, seconds = self.get_minsec(departure_time)
+
+			if(prediction['relationships']['route']['data']['id'] == self.line):
+				return_predictions.append(['NA', direction, minutes, seconds])
 
 		return return_predictions
-		
+
+
+	def get_minsec(self, time):
+		''' Convert the departure timestamp into a minutes/seconds from now '''
+		try:
+			now = dt.now(timezone)
+			departure = dt.strptime(time, '%Y-%m-%dT%H:%M:%S%z')
+
+			difference = departure - now
+
+			return math.floor(difference.seconds / 60), difference.seconds % 60
+		except:
+			return 0, 0
+
 			
 	def timesToDisplay(self, item):
 		'''
@@ -97,9 +120,8 @@ class MBTATimeTracker(eink):
 			route: The route to find the direction of
 		'''
 		try:
-			self.response_tmp = urllib.urlopen(self.url+'/routes/'+route)
-			self.json_tmp = self.jsonLoad(self.response_tmp)
-			return self.json_tmp['data']['attributes']['direction_names'][direction_id]
+			response = self.mbta_request("routes/"+str(route))
+			return response['attributes']['direction_names'][direction_id]
 		
 		except:
 			print("ERROR: Could not find direction id " + str(direction_id) + ' for route ' + str(route))
@@ -108,3 +130,6 @@ class MBTATimeTracker(eink):
 
 if(__name__ == '__main__'):
 	m = MBTATimeTracker('place-rugg', 'Orange')
+	a = m.stop_predictions()
+	print(a)
+	m.timesToDisplay(a)
