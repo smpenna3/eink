@@ -5,9 +5,21 @@ import logging
 import traceback
 import sys
 import math
+import time
 from stops import stops
+from datetime import timedelta
 from datetime import datetime as dt
 import pytz
+
+### DEFINE
+update_rate = 20  # Seconds 
+
+
+## Scheduler setup
+from apscheduler.schedulers.background import BackgroundScheduler
+sched = BackgroundScheduler(timezone="America/New_York", \
+								coalescing=True, misfire_grace_time=20)
+sched.start()
 
 timezone = pytz.timezone('US/Eastern')
 
@@ -62,7 +74,20 @@ class MBTATimeTracker(eink):
 			now = dt.now(timezone)
 			departure = dt.strptime(time, '%Y-%m-%dT%H:%M:%S%z')
 
-			difference = departure - now
+			# Find the time to departure minus the update rate for worst case
+			difference = departure - now - timedelta(seconds=update_rate)
+
+			# If that works out to be negative train is arriving now
+			if(difference < timedelta(seconds=0)):
+				return 'BRD', 0
+
+			# If less than a minute the train is arriving
+			elif(difference < timedelta(seconds=60)):
+				return 'ARR', 0
+
+			# If less than 30 seconds the train is boarding
+			elif(difference < timedelta(seconds=30)):
+				return 'BRD', 0
 
 			return math.floor(difference.seconds / 60), difference.seconds % 60
 		except:
@@ -105,8 +130,15 @@ class MBTATimeTracker(eink):
 		for i in range(0, self.max_tmp):
 			if(len(str(item[i][3])) == 1):
 				item[i][3] = '0' + str(item[i][3])
-			self.str_tmp = str(item[i][2]) + ':' + str(item[i][3])
-			self.eink.rightText(self.str_tmp, self.listing_fontSize, self.eink.xend, self.title_fontSize+self.spacingTop+8+self.interSpacing+((self.listing_fontSize+self.interSpacing)*i))
+			
+			# If train is arriving or boarding print that
+			if(item[i][2] in ['ARR', 'BRD']):
+				self.eink.rightText(item[i][2], self.listing_fontSize, self.eink.xend, self.title_fontSize+self.spacingTop+8+self.interSpacing+((self.listing_fontSize+self.interSpacing)*i))
+			
+			# Otherwise print the time to arrival
+			else:
+				self.str_tmp = str(item[i][2]) + ':' + str(item[i][3])
+				self.eink.rightText(self.str_tmp, self.listing_fontSize, self.eink.xend, self.title_fontSize+self.spacingTop+8+self.interSpacing+((self.listing_fontSize+self.interSpacing)*i))
 
 		# Display the times on the e-paper display
 		self.eink.display()
@@ -127,9 +159,21 @@ class MBTATimeTracker(eink):
 			print("ERROR: Could not find direction id " + str(direction_id) + ' for route ' + str(route))
 			print(traceback.format_exc())
 
+	def update(self):
+		pred = self.stop_predictions()
+		self.timesToDisplay(pred)
+		#print("Predictions updated")
+
 
 if(__name__ == '__main__'):
 	m = MBTATimeTracker('place-rugg', 'Orange')
-	a = m.stop_predictions()
-	print(a)
-	m.timesToDisplay(a)
+	sched.add_job(m.update, 'interval', seconds=update_rate, id='Predictions')
+	m.update()
+	print("started job")
+
+	try:
+		while(1):
+			time.sleep(1)
+	except:
+		print(traceback.format_exc())
+		exit(1)
