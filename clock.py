@@ -15,7 +15,10 @@ class clock:
 
         
     def update_time(self):
-        time = dt.stftime(dt.now(), "%H:%M")
+        current_time = dt.strftime(dt.now(), "%H:%M")
+        self.eink.rotatedText(current_time, 90, 20, self.eink.xend/2, 20/2+10/2, fill=0)
+        self.eink.display()
+        time.sleep(5)
 
-        self.eink.rotatedText(time, 90, 20, self.eink.xend/2, self.title_fontSize/2+self.spacingTop/2, fill=0)
-		
+
+clock = clock()
